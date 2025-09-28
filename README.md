@@ -1,20 +1,18 @@
 # Welcome to the SuperDataScience Community Project!
 
-Welcome to the **** repository! 🎉
+Welcome to the **ModelOps: Deploying Machine Learning Models to Production** repository! 🎉
 
-This project is a collaborative initiative brought to you by SuperDataScience, a global learning community focused on data science, machine learning, and AI. Whether you’re starting with Generative AI or looking to deepen your skills with tool-using LLMs, we’re excited to have you on board!
+This project is a collaborative initiative brought to you by **SuperDataScience**, a global community dedicated to advancing the fields of **Data Science, Machine Learning, and AI**. We’re excited to have you on board for this journey of hands-on learning, experimentation, and growth.
 
-To contribute to this project, please follow the steps outlined in our [CONTRIBUTING.md](./CONTRIBUTING.md) file.
+To contribute to this project, please follow the guidelines in our [CONTRIBUTING.md](./CONTRIBUTING.md).
 
----
 
 ## 📂 Repository Structure
 
 This project supports two tracks based on experience level:
 
 ```
-
-project-name/
+SDS-CP040-modelops/
 ├── beginner/                 ← Beginner track files
 │   ├── README.md             ← Scope of Works for Beginner Track
 │   ├── REPORT.md             ← Markdown template for beginner submissions
@@ -32,63 +30,57 @@ project-name/
 ├── CONTRIBUTING.md
 ├── requirements.txt
 └── README.md                 ← You are here!
-
 ```
 
----
 
 ## 🟢 Beginner Track
 
+The **Beginner Track** introduces participants to core **MLOps fundamentals** with a simple, hands-on deployment flow. You’ll:
 
+* Build a **Streamlit or Gradio UI** around a ready-made ML model
+* **Containerize** the app with Docker
+* **Deploy** it to Hugging Face Spaces for a live, shareable demo
 
-📌 Get started:  
-➡️ [Beginner Track Scope of Works](./beginner/README.md)  
-➡️ [Beginner Report Template](./beginner/REPORT.md)  
-➡️ [Submit your work](./beginner/submissions/)  
+📌 Get started:
+➡️ [Beginner Track Scope of Works](./beginner/README.md)
+➡️ [Beginner Report Template](./beginner/REPORT.md)
+➡️ [Submit your work](./beginner/submissions/)
 
----
 
 ## 🔴 Advanced Track
 
+The **Advanced Track** focuses on building a more **production-grade ML service**. You’ll:
+
+* Develop a **FastAPI backend** (with a minimal frontend)
+* **Containerize** your application with Docker
+* Set up a **basic CI/CD pipeline** using GitHub Actions
+* **Deploy** the service to a cloud platform such as Hugging Face Spaces, Render, or AWS/GCP
+
+📌 Get started:
+➡️ [Advanced Track Scope of Works](./advanced/README.md)
+➡️ [Advanced Report Template](./advanced/REPORT.md)
+➡️ [Submit your work](./advanced/submissions/)
 
 
-📌 Get started:  
-➡️ [Advanced Track Scope of Works](./advanced/README.md)  
-➡️ [Advanced Report Template](./advanced/REPORT.md)  
-➡️ [Submit your work](./advanced/submissions/)  
+## 📊 Dataset / Model
 
----
+For this project, we’ll provide a pre-trained ML model artifact (model.pkl) that already includes preprocessing and the trained estimator. This ensures participants can focus on serving, containerization, and deployment rather than model training.
 
-## 📊 Dataset
+## 🗂️ Project Workflow & Timeline
 
----
+| Week       | Beginner Track (UI-first)                      | Advanced Track (API-first)                  |
+| ---------- | ---------------------------------------------- | ------------------------------------------- |
+| **Week 1** | Setup + Build Streamlit/Gradio UI + Local test | Setup + FastAPI service + Local inference   |
+| **Week 2** | Containerize app & deploy to Huggingface spaces| Containerize FastAPI app with Docker        |
+| **Week 3** |                      -                         | Deploy and setup CI/CD pipelines            |
 
-## 🌍 APIs & Tools
-
-This project relies on live web data via APIs.  
-- **Search APIs**: [Tavily](https://tavily.com/) or [SerpAPI](https://serpapi.com/)  
-- **LLMs**: OpenAI GPT models (or any provider supporting function/tool calling)  
-- **Deployment**: [Streamlit](https://streamlit.io/) or [Gradio](https://www.gradio.app/)  
-
----
-
-## 🗒️ Project Timeline Overview
-
-| Phase                           | General Activities                                                     |
-| ------------------------------- | ---------------------------------------------------------------------- |
-| **Week 1: Setup + EDA**         | Clean, explore, and visualize the data                                 |
-| **Week 2: Feature Engineering** | Transform features, encode variables, handle imbalance, prepare splits |
-| **Week 3: Model Development**   | Train ML or DL models and evaluate performance                         |
-| **Week 4: Model Optimization**  | Tune models, improve generalization, and interpret results             |
-| **Week 5: Deployment**          | Deploy models via Streamlit or API-based solutions                     |
-
----
 
 ## 🙌 Contributions & Community
 
 This project is open to both official team members and outside community contributors.
 
-* 🧑‍💻 **Team Members** should submit their work under `team-members/`  
-* 🌍 **Community Contributors** are welcome to fork the repo and submit under `community-contributions/`  
+* 🧑‍💻 **Team Members** should submit their work under `team-members/`
+* 🌍 **Community Contributors** are welcome to fork the repo and submit under `community-contributions/`
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to participate.
+
