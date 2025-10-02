@@ -64,7 +64,7 @@ The **Advanced Track** focuses on building a more **production-grade ML service*
 
 ## 📊 Dataset / Model
 
-For this project, we’ll provide a pre-trained ML model artifact (model.pkl) that already includes preprocessing and the trained estimator. This ensures participants can focus on serving, containerization, and deployment rather than model training.
+For this project, we’ll provide pre-trained ML model artifacts that already include preprocessing and the trained estimator. This ensures participants can focus on serving, containerization, and deployment rather than model training.
 
 ## 🗂️ Project Workflow & Timeline
 
