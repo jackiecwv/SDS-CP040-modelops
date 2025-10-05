@@ -11,7 +11,7 @@ plotly
 
 # Machine learning
 scikit-learn
-# xgboost
+xgboost
 # lightgbm
 # catboost
 
@@ -37,3 +37,7 @@ notebook
 # Optional: Data connectors
 # sqlalchemy
 # openpyxl
+
+# fastapi dependencies
+fastapi
+uvicorn
