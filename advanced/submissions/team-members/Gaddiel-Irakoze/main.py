@@ -63,9 +63,12 @@ def predict_car_price(payload: dict):
     return {"predicted_price": round(float(prediction), 2)}
 
 # Define the root endpoint
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def read_root():
-    return {"Status":"API is up and running"}
+    html_path = os.path.join("templates","index.html")
+    with open(html_path, "r") as f:
+        html_content = f.read()
+        return HTMLResponse(content=html_content)
 
 """"
 To pass the payload data to the code, use the following command:
