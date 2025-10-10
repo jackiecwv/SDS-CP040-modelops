@@ -145,16 +145,33 @@ The model uses the following features:
 - **Derived**: Age (current year - year of manufacture), Mileage per year, Vintage flag (age ≥ 20 years)
 - **Current year**: Set to 2025 for age calculations
 
-### Supported Values
-The model was trained on these specific values (extracted from OneHotEncoder categories):
+### Dropdown Data Sources
+
+The application uses a **hybrid approach** for populating dropdown menus:
+
+#### ✅ **From Trained Model** (Extracted at Runtime)
+These values are **extracted directly from the model's OneHotEncoder** to ensure 100% compatibility:
 - **Manufacturers**: BMW, Ford, Porsche, Toyota, VW
-- **Models**:
-  - BMW: M5, X3, Z4
-  - Ford: Fiesta, Focus, Mondeo
-  - Porsche: 718 Cayman, 911, Cayenne
-  - Toyota: Prius, RAV4, Yaris
-  - VW: Golf, Passat, Polo
+- **Models**: M5, X3, Z4, Fiesta, Focus, Mondeo, 718 Cayman, 911, Cayenne, Prius, RAV4, Yaris, Golf, Passat, Polo
 - **Fuel Types**: Diesel, Hybrid, Petrol
+
+**How it works**: The `/features` endpoint extracts categories from the model's preprocessor:
+```python
+categories = cat_transformer.categories_
+manufacturers = sorted(categories[0].tolist())  # Directly from model
+models = sorted(categories[1].tolist())          # Directly from model
+fuel_types = sorted(categories[2].tolist())      # Directly from model
+```
+
+#### ⚙️ **Reasonable Defaults** (For User Convenience)
+These provide sensible options for numeric fields (the model accepts any reasonable value):
+- **Engine Sizes**: 0.8L to 5.0L (common car engine sizes)
+- **Years**: 2000-2025 (reasonable car manufacturing years)
+- **Mileage Options**: 0 to 300,000 km (with option for custom input)
+
+**Model-by-Manufacturer Mapping**:
+- Hardcoded in frontend for cascading dropdown functionality
+- Can be overridden by placing a `models_map.json` file next to the model
 
 ### Error Handling
 - **Backend**: HTTPException with detailed error messages and logging
