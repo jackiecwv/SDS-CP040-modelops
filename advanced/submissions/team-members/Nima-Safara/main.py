@@ -4,10 +4,13 @@ With this code, the goal is to demonstrate the process of deploying machine lear
 # Import necessary libraries
 import joblib
 import pandas as pd
+from typing import Annotated
+from contextlib import asynccontextmanager
 from pydantic import BaseModel, Field, ConfigDict
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
 import uvicorn
 import os
 from pathlib import Path
@@ -18,29 +21,16 @@ import json
 class CarFeatures(BaseModel):
     Manufacturer: str
     Model: str
-    Fuel_type: str = Field(..., alias="Fuel type")
-    Engine_size: float = Field(..., alias="Engine size", gt=0)
-    Year_of_manufacture: int = Field(
-        ..., alias="Year of manufacture", ge=1980
-    )
-    Mileage: float = Field(..., ge=0)
+    Fuel_type: Annotated[str, Field(alias="Fuel type")]
+    Engine_size: Annotated[float, Field(alias="Engine size", gt=0)]
+    Year_of_manufacture: Annotated[int, Field(alias="Year of manufacture", ge=1980)]
+    Mileage: Annotated[float, Field(ge=0)]
 
     # Pydantic v2 configuration: allow population by field name when alias exists
     model_config = ConfigDict(populate_by_name=True)
 
-CURRENT_YEAR = 2025
-
-# Create FastAPI app
-app = FastAPI(title="Car Price Prediction API", version="1.0.0")
-
-# Add CORS middleware to allow frontend to communicate with backend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific origins
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Current year for age calculation from system date
+CURRENT_YEAR = datetime.now().year
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -58,16 +48,77 @@ def resolve_model_path() -> Path:
     repo_root = Path(__file__).resolve().parents[4]
     return repo_root / "models" / "model.pkl"
 
-@app.on_event("startup")
-def load_model_on_startup():
+def fix_xgboost_compatibility(pipeline):
+    """
+    Fix compatibility issues with XGBoost models trained on older versions.
+    Wraps XGBoost model's get_params method to handle deprecated/missing parameters.
+    """
+    try:
+        if hasattr(pipeline, 'named_steps') and 'model' in pipeline.named_steps:
+            xgb_model = pipeline.named_steps['model']
+
+            # Store original get_params method
+            original_get_params = xgb_model.get_params
+
+            # Create wrapper that handles missing attributes
+            def safe_get_params(deep=True):
+                """Wrapper for get_params that sets defaults for missing attributes."""
+                # Common deprecated/missing parameters in older XGBoost versions
+                default_params = {
+                    'gpu_id': -1,
+                    'predictor': 'auto',
+                    'tree_method': 'auto',
+                    'booster': 'gbtree',
+                    'n_jobs': 1,
+                    'verbosity': 0,
+                }
+
+                # Set missing attributes to defaults
+                for param, default_value in default_params.items():
+                    if not hasattr(xgb_model, param):
+                        setattr(xgb_model, param, default_value)
+
+                # Call original method
+                return original_get_params(deep=deep)
+
+            # Replace get_params method
+            xgb_model.get_params = safe_get_params
+            logger.info("Applied XGBoost compatibility fix")
+
+    except Exception as e:
+        logger.warning(f"Could not apply XGBoost compatibility fix: {e}")
+    return pipeline
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Modern lifespan context manager for startup/shutdown events."""
+    # Startup: Load model
     global model
     model_path = resolve_model_path()
     try:
         model = joblib.load(model_path)
+        model = fix_xgboost_compatibility(model)
         logger.info(f"Model loaded from: {model_path}")
     except Exception as e:
         logger.error(f"Failed to load model from {model_path}: {e}")
         model = None
+
+    yield  # Application is running
+
+    # Shutdown: cleanup if needed
+    logger.info("Application shutting down")
+
+# Create FastAPI app with lifespan
+app = FastAPI(title="Car Price Prediction API", version="1.0.0", lifespan=lifespan)
+
+# Add CORS middleware to allow frontend to communicate with backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with specific origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Root endpoint - serve the HTML page
 @app.get("/")
@@ -181,11 +232,12 @@ def predict_car_price(payload: CarFeatures):
         vintage = int(age >= 20)
 
         # Create single-row dataframe with ALL columns needed
+        # IMPORTANT: Column order MUST match the model's expected feature order
         row = {
             "Manufacturer": payload.Manufacturer,
             "Model": payload.Model,
-            "Fuel type": payload.Fuel_type,
             "Engine size": payload.Engine_size,
+            "Fuel type": payload.Fuel_type,
             "Year of manufacture": payload.Year_of_manufacture,
             "Mileage": payload.Mileage,
             # derived:

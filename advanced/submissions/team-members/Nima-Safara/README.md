@@ -6,10 +6,12 @@ This is a full-stack web application that predicts car prices using a pre-traine
 
 ### Backend
 - **FastAPI** with automatic API documentation (`/docs`, `/redoc`)
+- **Modern lifespan context manager** for startup/shutdown events (no deprecation warnings)
+- **XGBoost compatibility layer** handles older model versions seamlessly
 - **Robust error handling** with HTTPException and detailed logging
 - **Health & readiness checks** (`/health`, `/ready`) for Kubernetes/Docker deployments
 - **Environment-based model loading** with `MODEL_PATH` override support
-- **Pydantic v2 validation** with field constraints (engine size > 0, year ≥ 1980, etc.)
+- **Pydantic v2 validation** with modern Annotated types and field constraints
 - **Comprehensive logging** for debugging and monitoring
 
 ### Frontend
@@ -143,7 +145,7 @@ The app runs on http://localhost:8000
 The model uses the following features:
 - **Input**: Manufacturer, Model, Fuel type, Engine size, Year of manufacture, Mileage
 - **Derived**: Age (current year - year of manufacture), Mileage per year, Vintage flag (age ≥ 20 years)
-- **Current year**: Set to 2025 for age calculations
+- **Current year**: Dynamically set to system date for age calculations
 
 ### Dropdown Data Sources
 
@@ -196,11 +198,11 @@ If you see "Model not loaded" errors:
 2. Set `MODEL_PATH` environment variable if model is elsewhere
 3. Check server logs for detailed error messages
 
-### Version Warnings
-You may see sklearn version warnings (trained on 1.7.2, using 1.6.1):
-- These are informational warnings only
-- The model will still work correctly
-- To eliminate warnings: `pip install --upgrade scikit-learn`
+### Version Compatibility
+The application includes automatic compatibility handling:
+- **XGBoost**: Automatically handles models trained on older versions (deprecated parameters like `gpu_id` are patched at runtime)
+- **Scikit-learn**: You may see version warnings - these are informational only and don't affect functionality
+- The XGBoost warning about `Booster.save_model` is expected when loading older pickled models
 
 ### Port Already in Use
 If port 8000 is busy:
