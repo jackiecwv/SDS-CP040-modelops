@@ -7,3 +7,8 @@
 !requirements.txt
 !main.py
 !index.html
+!Dockerfile
+!.dockerignore
+!DEPLOYMENT.md
+!templates/
+!templates/**

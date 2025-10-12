@@ -29,6 +29,9 @@ Nima-Safara/
 ├── main.py            # FastAPI backend application
 ├── index.html         # Frontend user interface
 ├── requirements.txt   # Python dependencies
+├── Dockerfile         # Docker configuration for deployment
+├── .dockerignore      # Docker build optimization
+├── DEPLOYMENT.md      # Deployment guide (Render/Hugging Face)
 └── README.md          # Documentation
 ```
 
@@ -211,6 +214,35 @@ If port 8000 is busy:
 uvicorn.run(app, host="0.0.0.0", port=8001)  # Use different port
 ```
 
+## Deployment
+
+This application is ready for production deployment with Docker support.
+
+### Docker Deployment
+The application includes a production-ready Dockerfile and can be deployed to:
+- **Render** - Free/paid cloud platform with automatic deployments
+- **Hugging Face Spaces** - ML-focused deployment platform
+- Any Docker-compatible platform (AWS ECS, Google Cloud Run, Azure Container Apps, etc.)
+
+**Quick Docker Test**:
+```bash
+docker build -t car-price-api .
+docker run -p 8000:8000 car-price-api
+```
+
+**For detailed deployment instructions**, see [DEPLOYMENT.md](DEPLOYMENT.md) which includes:
+- Step-by-step guides for Render and Hugging Face
+- Environment configuration
+- Troubleshooting tips
+- Production recommendations
+
+### Key Deployment Features
+✅ Health checks for container orchestration
+✅ Model included in Docker image
+✅ Dynamic port binding (supports Render's PORT variable)
+✅ Production-optimized dependencies
+✅ Proper error handling and logging
+
 ## Future Enhancements
 - [ ] Add authentication/authorization
 - [ ] Implement rate limiting
@@ -218,5 +250,4 @@ uvicorn.run(app, host="0.0.0.0", port=8001)  # Use different port
 - [ ] Support for batch predictions
 - [ ] Model versioning and A/B testing
 - [ ] Prometheus metrics endpoint
-- [ ] Docker containerization
 - [ ] Kubernetes deployment manifests
