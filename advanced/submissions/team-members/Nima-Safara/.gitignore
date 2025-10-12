@@ -10,5 +10,6 @@
 !Dockerfile
 !.dockerignore
 !DEPLOYMENT.md
+!model.pkl
 !templates/
 !templates/**

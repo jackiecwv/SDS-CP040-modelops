@@ -29,33 +29,45 @@ Nima-Safara/
 ├── main.py            # FastAPI backend application
 ├── index.html         # Frontend user interface
 ├── requirements.txt   # Python dependencies
+├── model.pkl          # Pre-trained XGBoost model (1.8MB)
 ├── Dockerfile         # Docker configuration for deployment
 ├── .dockerignore      # Docker build optimization
 ├── DEPLOYMENT.md      # Deployment guide (Render/Hugging Face)
 └── README.md          # Documentation
 ```
 
-Model file (outside this folder): `SDS-CP040-modelops/models/model.pkl`
+**Note:** The model file is included in this directory for deployment purposes. The original model is also available at: `SDS-CP040-modelops/models/model.pkl`
 
 ## Setup
+
+### Model Loading Priority
+The application automatically finds the model in this order:
+1. **Local directory** - `model.pkl` in the same folder as `main.py` (✅ included)
+2. **Environment variable** - `MODEL_PATH` if set
+3. **Repository root** - Falls back to `../../../../models/model.pkl`
+
+Since `model.pkl` is already in this directory, no additional configuration is needed!
+
+### Running Locally
+
 1) Create a virtual environment and install dependencies
-```
+```bash
 pip install -r requirements.txt
 ```
 
-2) Optional: set a custom model path
-```
-# Windows (PowerShell)
-$Env:MODEL_PATH = "<ABSOLUTE_PATH_TO>/models/model.pkl"
-# macOS/Linux
-export MODEL_PATH="<ABSOLUTE_PATH_TO>/models/model.pkl"
-```
-
-3) Run the application
-```
+2) Run the application
+```bash
 python main.py
 ```
 The app runs on http://localhost:8000
+
+**Optional**: Override model location
+```bash
+# Windows (PowerShell)
+$Env:MODEL_PATH = "<ABSOLUTE_PATH_TO>/custom_model.pkl"
+# macOS/Linux
+export MODEL_PATH="<ABSOLUTE_PATH_TO>/custom_model.pkl"
+```
 
 ## Using the App
 
@@ -197,9 +209,10 @@ These provide sensible options for numeric fields (the model accepts any reasona
 
 ### Model Loading Issues
 If you see "Model not loaded" errors:
-1. Check the model path: `C:\...\SDS-CP040-modelops\models\model.pkl`
-2. Set `MODEL_PATH` environment variable if model is elsewhere
-3. Check server logs for detailed error messages
+1. Verify `model.pkl` exists in the same directory as `main.py` (it should be there)
+2. Check the `/ready` endpoint: `curl http://localhost:8000/ready`
+3. Set `MODEL_PATH` environment variable if you want to use a different model
+4. Check server logs for detailed error messages (model path will be logged)
 
 ### Version Compatibility
 The application includes automatic compatibility handling:

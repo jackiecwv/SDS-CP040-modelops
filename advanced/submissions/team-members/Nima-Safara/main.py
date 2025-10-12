@@ -40,11 +40,18 @@ logger = logging.getLogger("car-price-api")
 model = None
 
 def resolve_model_path() -> Path:
-    """Resolve model path via env var MODEL_PATH or relative to this file."""
+    """Resolve model path: check local first, then env var, then repo root."""
+    # Priority 1: Check for model in same directory as this file
+    local_model = Path(__file__).parent / "model.pkl"
+    if local_model.exists():
+        return local_model
+
+    # Priority 2: Check MODEL_PATH environment variable
     env_path = os.getenv("MODEL_PATH")
     if env_path:
         return Path(env_path).expanduser().resolve()
-    # Repo root is four levels up from this file: .../SDS-CP040-modelops
+
+    # Priority 3: Fall back to repo root (for backward compatibility)
     repo_root = Path(__file__).resolve().parents[4]
     return repo_root / "models" / "model.pkl"
 

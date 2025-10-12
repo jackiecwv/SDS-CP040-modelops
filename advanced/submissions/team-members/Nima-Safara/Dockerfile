@@ -28,8 +28,8 @@ COPY index.html .
 # Create templates directory if it exists in your project
 COPY templates ./templates 2>/dev/null || true
 
-# Copy model file from repository
-COPY ../../../../models/model.pkl ./model.pkl
+# Copy model file from local directory
+COPY model.pkl ./model.pkl
 
 # Set MODEL_PATH environment variable to point to the model
 ENV MODEL_PATH=/app/model.pkl

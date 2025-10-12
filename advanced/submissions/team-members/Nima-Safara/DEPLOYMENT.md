@@ -10,7 +10,7 @@ This guide covers deploying the Car Price Prediction API to Render or Hugging Fa
 
 ## Important: Model File
 
-✅ The model file is **automatically included** in the Docker image during build. The Dockerfile copies the model from `../../../../models/model.pkl` and sets the `MODEL_PATH` environment variable to `/app/model.pkl`.
+✅ The model file (`model.pkl`) is **included in this directory** and automatically bundled into the Docker image during build. The Dockerfile copies the model and sets the `MODEL_PATH` environment variable to `/app/model.pkl`.
 
 **No additional configuration needed** - the model is ready to use out of the box!
 
@@ -27,7 +27,7 @@ Ensure your repository contains:
 - `main.py`
 - `index.html`
 - `requirements.txt`
-- Access to `../../../../models/model.pkl` (relative to your project directory)
+- `model.pkl` (included in the directory)
 
 ### Step 2: Create Render Account
 1. Go to [render.com](https://render.com)
@@ -86,9 +86,9 @@ cp /path/to/your/.dockerignore .
 cp /path/to/your/main.py .
 cp /path/to/your/index.html .
 cp /path/to/your/requirements.txt .
+cp /path/to/your/model.pkl .
 # Copy templates directory if exists
 cp -r /path/to/your/templates .
-# Ensure model is accessible at ../../../../models/model.pkl relative to Dockerfile
 
 # Commit and push
 git add .
@@ -170,7 +170,7 @@ curl -X POST "https://your-api-url.com/predict" \
 ## Troubleshooting
 
 ### Model Not Found
-- Ensure the model exists at `../../../../models/model.pkl` relative to the Dockerfile when building
+- Ensure `model.pkl` exists in the same directory as the Dockerfile
 - Check Docker build logs to verify the model was copied successfully
 - Verify the `/ready` endpoint returns `{"model_loaded": true}`
 
