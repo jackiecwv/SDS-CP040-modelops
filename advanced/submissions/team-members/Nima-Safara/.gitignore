@@ -1,0 +1,15 @@
+# Ignore everything in this directory by default
+*
+
+# Allow these files to be tracked
+!.gitignore
+!README.md
+!requirements.txt
+!main.py
+!index.html
+!Dockerfile
+!.dockerignore
+!DEPLOYMENT.md
+!model.pkl
+!templates/
+!templates/**
