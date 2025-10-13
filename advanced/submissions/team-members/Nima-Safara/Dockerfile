@@ -25,9 +25,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 COPY index.html .
 
-# Create templates directory if it exists in your project
-COPY templates ./templates 2>/dev/null || true
-
 # Copy model file from local directory
 COPY model.pkl ./model.pkl
 
