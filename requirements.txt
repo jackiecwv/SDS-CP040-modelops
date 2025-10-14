@@ -39,5 +39,5 @@ notebook
 # openpyxl
 
 # fastapi dependencies
-fastapi
+fastapi[standard]
 uvicorn
