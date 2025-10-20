@@ -7,18 +7,25 @@ import os
 import pandas as pd
 from fastapi import FastAPI
 from fastapi import Request
-from pydantic import BaseModel
+from fastapi import HTTPException
+from pydantic import BaseModel, Field
 
 # Add a pydantic model for the car features
 class CarFeatures(BaseModel):
     Manufacturer: str
     Model: str
-    Fuel_type: str
-    Engine_size: float
-    Year_of_manufacture: int
+    Fuel_type: str = Field(alias="Fuel type")
+    Engine_size: float = Field(alias="Engine size")
+    Year_of_manufacture: int = Field(alias="Year of manufacture")
     Mileage: float
+
     
-app = FastAPI()
+app = FastAPI()  # Do NOT set docs_url=None or openapi_url=None
+
+# --- Add a root endpoint for friendly reminder ---
+@app.get("/")
+def root():
+    return {"message": "Car Price Prediction API is live! See /docs for usage."}
 
 # Load the trained model ONCE when the application starts
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.pkl')
@@ -38,38 +45,41 @@ def metadata():
         "description": "A model to predict car prices based on various features."
     }
 
+
 # Add /predict endpoint
 @app.post("/predict")
 def predict(car_features: CarFeatures):
-    CURRENT_YEAR = 2025
-    car_age = max(CURRENT_YEAR - car_features.Year_of_manufacture, 0)  # Ensure non-negative age
-    mileage_per_year = car_features.Mileage/max(car_age, 1)  # Avoid division by zero
-    vintage = int(car_age >= 20)
+    try:
+        CURRENT_YEAR = 2025
+        car_age = max(CURRENT_YEAR - car_features.Year_of_manufacture, 0)  # Ensure non-negative age
+        mileage_per_year = car_features.Mileage / max(car_age, 1)  # Avoid division by zero
+        vintage = int(car_age >= 20)
 
-    # Prepare row dictionary - collect all car features and engineered features into a single structure. 
-    row = {
-        # Feature extraction code:
-        "Manufacturer": car_features.Manufacturer.strip(),
-        "Model": car_features.Model.strip(),
-        "Engine size": car_features.Engine_size,
-        "Fuel type": car_features.Fuel_type.strip(),
-        "Year of manufacture": car_features.Year_of_manufacture,
-        "Mileage": car_features.Mileage,
-        "age": car_age,
-        "mileage_per_year": mileage_per_year,
-        "vintage": vintage
-    }
+        # Prepare row dictionary - collect all car features and engineered features into a single structure. 
+        row = {
+            "Manufacturer": car_features.Manufacturer.strip(),
+            "Model": car_features.Model.strip(),
+            "Engine size": car_features.Engine_size,
+            "Fuel type": car_features.Fuel_type.strip(),
+            "Year of manufacture": car_features.Year_of_manufacture,
+            "Mileage": car_features.Mileage,
+            "age": car_age,
+            "mileage_per_year": mileage_per_year,
+            "vintage": vintage
+        }
 
-    # Builds a table with your input data, just like the model expects
-    df = pd.DataFrame([row])
+        # Builds a table with your input data, just like the model expects
+        df = pd.DataFrame([row])
 
-    print("\n--- DATAFRAME SENT TO MODEL ---")
-    print(df)
-    print("------------------------------\n")
+        print("\n--- DATAFRAME SENT TO MODEL ---")
+        print(df)
+        print("------------------------------\n")
 
-    # Runs the model to get a prediction for that row. 
-    prediction = model.predict(df)[0]
+        # Runs the model to get a prediction for that row. 
+        prediction = model.predict(df)[0]
 
-    # Returns the predicted price in a user-friendly way
-    predicted_price = float(round(prediction, 2))
-    return {"predicted_price": predicted_price}
+        # Returns the predicted price in a user-friendly way
+        predicted_price = float(round(prediction, 2))
+        return {"predicted_price_gbp": predicted_price}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
