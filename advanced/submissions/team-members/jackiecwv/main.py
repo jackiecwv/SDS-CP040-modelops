@@ -2,13 +2,26 @@
 # Intended for use in a production ModelOps API.
 
 # Import libraries
-import joblib
-import os
+import joblib                               # For loading the trained model
+import os                                   # For file path management
 import pandas as pd
-from fastapi import FastAPI
-from fastapi import Request
-from fastapi import HTTPException
-from pydantic import BaseModel, Field
+from fastapi import FastAPI                 # Main FastAPI class
+from fastapi import Request                 # For handling requests
+from fastapi import HTTPException           # For error handling
+from pydantic import BaseModel, Field       # For data validation
+from fastapi.staticfiles import StaticFiles # To serve static files
+from fastapi.responses import FileResponse  # To serve HTML files
+
+app = FastAPI()  # Do NOT set docs_url=None or openapi_url=None
+
+# Mount static directory to serve images and HTML
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Serve index.html at the root URL
+@app.get("/")
+def read_root():
+    return FileResponse("static/index.html")
+
 
 # Add a pydantic model for the car features
 class CarFeatures(BaseModel):
@@ -18,9 +31,6 @@ class CarFeatures(BaseModel):
     Engine_size: float = Field(alias="Engine size")
     Year_of_manufacture: int = Field(alias="Year of manufacture")
     Mileage: float
-
-    
-app = FastAPI()  # Do NOT set docs_url=None or openapi_url=None
 
 # --- Add a root endpoint for friendly reminder ---
 @app.get("/")
