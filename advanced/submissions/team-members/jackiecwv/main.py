@@ -32,11 +32,6 @@ class CarFeatures(BaseModel):
     Year_of_manufacture: int = Field(alias="Year of manufacture")
     Mileage: float
 
-# --- Add a root endpoint for friendly reminder ---
-@app.get("/")
-def root():
-    return {"message": "Car Price Prediction API is live! See /docs for usage."}
-
 # Load the trained model ONCE when the application starts
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.pkl')
 model = joblib.load(MODEL_PATH)
