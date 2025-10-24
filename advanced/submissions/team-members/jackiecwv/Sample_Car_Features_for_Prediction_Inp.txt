@@ -2,40 +2,48 @@
 {
   "Manufacturer": "Honda",
   "Model": "Civic",
-  "Fuel_type": "Petrol",
-  "Engine_size": 1.6,
-  "Year_of_manufacture": 2016,
+  "Fuel type": "Petrol",
+  "Engine size": 1.6,
+  "Year of manufacture": 2016,
   "Mileage": 42000
 }
 {
   "Manufacturer": "Toyota",
   "Model": "Corolla",
-  "Fuel_type": "Diesel",
-  "Engine_size": 2.0,
-  "Year_of_manufacture": 2018,
-  "Mileage": 30000
+  "Fuel type": "Petrol",
+  "Engine size": 1.8,
+  "Year of manufacture": 2019,
+  "Mileage": 35000
 }
 {
   "Manufacturer": "Ford",
   "Model": "Focus",
-  "Fuel_type": "Petrol",
-  "Engine_size": 1.5,
-  "Year_of_manufacture": 2017,
-  "Mileage": 35000
+  "Fuel type": "Diesel",
+  "Engine size": 2.0,
+  "Year of manufacture": 2015,
+  "Mileage": 60000
 }
 {
   "Manufacturer": "BMW",
   "Model": "3 Series",
-  "Fuel_type": "Diesel",
-  "Engine_size": 2.0,
-  "Year_of_manufacture": 2019,
-  "Mileage": 25000
+  "Fuel type": "Diesel",
+  "Engine size": 2.0,
+  "Year of manufacture": 2018,
+  "Mileage": 40000
 }
 {
   "Manufacturer": "Audi",
   "Model": "A4",
-  "Fuel_type": "Petrol",
-  "Engine_size": 2.0,
-  "Year_of_manufacture": 2020,
-  "Mileage": 15000
+  "Fuel type": "Petrol",
+  "Engine size": 2.0,
+  "Year of manufacture": 2017,
+  "Mileage": 50000
+}
+{
+  "Manufacturer": "Mercedes-Benz",
+  "Model": "C-Class",
+  "Fuel type": "Diesel",
+  "Engine size": 2.2,
+  "Year of manufacture": 2016,
+  "Mileage": 55000
 }
